@@ -1,3 +1,6 @@
+.idea
+phppsinfo.php
+
 # Cache, temp and personal files
 
 /.htaccess

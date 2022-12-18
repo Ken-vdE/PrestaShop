@@ -13,3 +13,6 @@
 [submodule "modules/is_shoppingcart"]
 	path = modules/is_shoppingcart
 	url = git@github.com:Oksydan/is_shoppingcart.git
+[submodule "modules/ew_custom"]
+	path = modules/ew_custom
+	url = git@github.com:Ken-vdE/ew_custom.git

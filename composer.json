@@ -13,6 +13,12 @@
             "homepage": "https://contributors.prestashop.com/"
         }
     ],
+    "repositories": [
+      {
+        "type": "path",
+        "url": "./modules/ew_prestacustom"
+      }
+    ],
     "require": {
         "php": ">=7.2.5",
         "ext-curl": "*",
@@ -136,7 +142,8 @@
         "symfony/symfony": "^4.4",
         "tecnickcom/tcpdf": "^6.2.12",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+        "everware/ew_prestacustom": "dev-master"
     },
     "require-dev": {
         "behat/behat": "^3.5",

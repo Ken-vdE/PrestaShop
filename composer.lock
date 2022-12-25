@@ -1770,21 +1770,30 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/ew_prestacustom",
-                "reference": "7622244f716e4c08884ea1211b1df4ce599040e1"
+                "reference": "8fa6f1709ce55c44988a56a469392a346b1cdc59"
             },
             "require": {
                 "php": ">=7.2.5"
             },
+            "require-dev": {
+                "ken-vde/composer-extend-class": "dev-master",
+                "prestashop/ps_facetedsearch": "dev-8.0.x-custom"
+            },
             "type": "prestashop-module",
+            "extra": {
+                "composer-extend-class": {
+                    "../ps_facetedsearch/src/Filters/Block.php": "src/Module/FacetedSearch/Filters/Block.php",
+                    "../ps_facetedsearch/src/Filters/Converter.php": "src/Module/FacetedSearch/Filters/Converter.php",
+                    "../ps_facetedsearch/src/Product/SearchProvider.php": "src/Module/FacetedSearch/Product/SearchProvider.php"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Everware\\PrestaCustom\\": "src/",
-                    "PrestaShop\\Module\\FacetedSearch\\Filters\\": "src/Module/FacetedSearch/Filters/"
+                    "PrestaShop\\Module\\FacetedSearch\\": "src/Module/FacetedSearch/"
                 },
                 "classmap": [],
-                "exclude-from-classmap": [
-                    "../../modules/ps_facetedsearch/src/Filters/Converter.php"
-                ]
+                "exclude-from-classmap": []
             },
             "license": [
                 "<???>"

@@ -25,7 +25,7 @@ function build {
     rm -rf node_modules
   fi
 
-  npm install
+  npm install --legacy-peer-deps
   npm run build
   popd
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf98aed0e055438cf0c6f4fb0e97c7af",
+    "content-hash": "df437cf80dd7073b6a048ee0ab42bd14",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -1770,7 +1770,7 @@
             "dist": {
                 "type": "path",
                 "url": "./modules/ew_prestacustom",
-                "reference": "8fa6f1709ce55c44988a56a469392a346b1cdc59"
+                "reference": "2c81c7ec3d13adb5c421fc6df92d35b1d7d05a99"
             },
             "require": {
                 "php": ">=7.2.5"
@@ -1781,16 +1781,11 @@
             },
             "type": "prestashop-module",
             "extra": {
-                "composer-extend-class": {
-                    "../ps_facetedsearch/src/Filters/Block.php": "src/Module/FacetedSearch/Filters/Block.php",
-                    "../ps_facetedsearch/src/Filters/Converter.php": "src/Module/FacetedSearch/Filters/Converter.php",
-                    "../ps_facetedsearch/src/Product/SearchProvider.php": "src/Module/FacetedSearch/Product/SearchProvider.php"
-                }
+                "composer-extend-class": []
             },
             "autoload": {
                 "psr-4": {
-                    "Everware\\PrestaCustom\\": "src/",
-                    "PrestaShop\\Module\\FacetedSearch\\": "src/Module/FacetedSearch/"
+                    "Everware\\PrestaCustom\\": "src/"
                 },
                 "classmap": [],
                 "exclude-from-classmap": []
@@ -12336,8 +12331,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "ezyang/htmlpurifier": 20,
-        "prestashop/laminas-code-lts": 20,
-        "everware/ew_prestacustom": 20
+        "prestashop/laminas-code-lts": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

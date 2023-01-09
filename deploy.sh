@@ -9,13 +9,10 @@
 #( flock -w 10 9 || exit 1
 #    echo 'Restarting FPM...'; sudo -S service $FORGE_PHP_FPM reload ) 9>/tmp/fpmlock
 
-# Because forge deployment does not use .bashrc, see https://github.com/nvm-sh/nvm#git-install
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# Print al (expanded) commands before executing
-set -x
+# Exit script on fail (use `|| true` if it's okay to fail).
+# Print al (expanded) commands before executing (after `. nvm.sh`).
+# Based on https://stackoverflow.com/a/2871034/3017716
+set -euxo pipefail
 
 cd /home/everwaresportscom
 mainDir=$(pwd)
@@ -29,19 +26,16 @@ dir=$(date +'%Y%m%d%H%M%S')
 mkdir "$dir"
 cd "$dir"
 
-# Do deployment.
+
+# Do deployment (based on https://devdocs.prestashop-project.org/8/basics/installation/localhost/).
 git clone --branch $FORGE_SITE_BRANCH --depth 1 --recurse-submodules --shallow-submodules git@github.com:Ken-vdE/PrestaShop.git .
-rm -rf install-dev # For security
 #git submodule update --init --recursive
-# Based on https://devdocs.prestashop-project.org/8/basics/installation/localhost/
+rm -rf install-dev # For security
+
 ./composer-install.sh --composer="$FORGE_COMPOSER" --prod
-set +x && nvm use 16 && set -x
-export NODE_OPTIONS=--max_old_space_size=2048 # 2GB
-# Not running `make assets` s o we don't build admin-default, admin-new-theme or front-classic every time.
-make front-core
+
 cp "$mainDir/everwaresports.com-persistents/themes/falcon/_dev/webpack/.env" "$(pwd)/themes/falcon/_dev/webpack/.env"
-npm --prefix themes/falcon/_dev install
-npm --prefix themes/falcon/_dev run build
+./npm-install.sh --prod
 
 mkdir log app/logs app/Resources/translations
 #TODO ADMIN_DIR variable?
@@ -84,12 +78,11 @@ done
 
 # Move back to main directory
 cd ..
-
 # Delete previous backup.
 [ -d everwaresports.com.bak ] && rm -rf everwaresports.com.bak
 # Backup previous deployment.
 mv everwaresports.com everwaresports.com.bak
-# Finalize en activate deployment.
+# Finalize and activate deployment.
 mv "$dir" everwaresports.com
 
 ( flock -w 10 9 || exit 1

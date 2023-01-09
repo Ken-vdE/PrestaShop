@@ -1,10 +1,9 @@
 #!/bin/bash
 
-#set -e
-#set -o pipefail
-# Print al (expanded) commands before executing
-set -x
-
+# Exit script on fail (use `|| true` if it's okay to fail).
+# Print al (expanded) commands before executing.
+# Based on https://stackoverflow.com/a/2871034/3017716
+set -euxo pipefail
 
 # For $FORGE_COMPOSER e.g. "php8.1 /usr/local/bin/composer" or "php /opt/homebrew/bin/composer"
 composer=${1:-composer}
@@ -28,23 +27,21 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-#pwd
-$composer install $composerArgs || exit $?
+$composer install $composerArgs
 
 wd=$(pwd)
 
-cd "$wd/modules/is_themecore" || exit $?
-#pwd
-$composer install $composerArgs || exit $?
+cd "$wd/modules/is_themecore"
+$composer install $composerArgs
 
-cd "$wd/modules/is_imageslider" || exit $?
-#pwd
-$composer install $composerArgs || exit $?
+cd "$wd/modules/is_imageslider"
+$composer install $composerArgs
 
-cd "$wd/modules/is_searchbar" || exit $?
-#pwd
-$composer install $composerArgs || exit $?
+cd "$wd/modules/is_searchbar"
+$composer install $composerArgs
 
-cd "$wd/modules/is_shoppingcart" || exit $?
-#pwd
-$composer install $composerArgs || exit $?
+cd "$wd/modules/is_shoppingcart"
+$composer install $composerArgs
+
+cd "$wd/modules/mollie"
+$composer install $composerArgs

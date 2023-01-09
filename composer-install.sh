@@ -28,23 +28,23 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-pwd
+#pwd
 $composer install $composerArgs || exit $?
 
 wd=$(pwd)
 
 cd "$wd/modules/is_themecore" || exit $?
-pwd
+#pwd
 $composer install $composerArgs || exit $?
 
 cd "$wd/modules/is_imageslider" || exit $?
-pwd
+#pwd
 $composer install $composerArgs || exit $?
 
 cd "$wd/modules/is_searchbar" || exit $?
-pwd
+#pwd
 $composer install $composerArgs || exit $?
 
 cd "$wd/modules/is_shoppingcart" || exit $?
-pwd
+#pwd
 $composer install $composerArgs || exit $?

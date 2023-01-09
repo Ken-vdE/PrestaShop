@@ -16,3 +16,6 @@
 [submodule "modules/ew_custom"]
 	path = modules/ew_prestacustom
 	url = git@github.com:Ken-vdE/ew_custom.git
+[submodule "modules/mollie"]
+	path = modules/mollie
+	url = git@github.com:mollie/PrestaShop1.7.git

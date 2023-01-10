@@ -85,5 +85,10 @@ mv everwaresports.com everwaresports.com.bak
 # Finalize and activate deployment.
 mv "$dir" everwaresports.com
 
+
+cd everwaresports.com
+$FORGE_PHP bin/console cache:clear --env=prod
+
+
 ( flock -w 10 9 || exit 1
     echo 'Restarting FPM...'; sudo -S service $FORGE_PHP_FPM reload ) 9>/tmp/fpmlock

@@ -44,21 +44,20 @@ chmod -R +w admin-dev/autoupgrade app/config app/logs app/Resources/translations
 persistentsDir="everwaresports.com-persistents"
 #tar -zcvf "$persistentsDir.bak.tar.gz" "$persistentsDir/"
 persistents=(
-    # Directories
-    "app/config/parameters.php"
-    "app/config/parameters.yml"
-    "config/defines_custom.inc.php"
-    "config/settings.inc.php"
-    # Files
     "admin-dev/themes/default" #TODO use $ADMIN_DIR
     "admin-dev/themes/new-theme" #TODO use $ADMIN_DIR
+    "app/config/parameters.php"
+    "app/config/parameters.yml"
     "app/logs"
+    "config/defines_custom.inc.php"
+    "config/settings.inc.php"
     "img"
     "mails"
+    "modules"
+    "robots.txt"
     "translations"
     "upload"
     "var"
-    "robots.txt"
 )
 for persistent in ${persistents[@]}; do
     freshlyClonedPersistentPath="$(pwd)/$persistent"

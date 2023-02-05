@@ -1,5 +1,6 @@
 .idea
 phppsinfo.php
+nginx.conf
 
 # Cache, temp and personal files
 

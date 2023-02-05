@@ -14,12 +14,15 @@
 # Based on https://stackoverflow.com/a/2871034/3017716
 set -euxo pipefail
 
+
 cd /home/everwaresportscom
 mainDir=$(pwd)
+
 
 # Delete previously failed deployments.
 # Based on https://unix.stackexchange.com/a/245287/340752 and https://stackoverflow.com/a/13032768/3017716
 find . -maxdepth 1 -type d -name "$(date +'%Y')[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]" -exec rm -rf {} +
+
 
 # Create new deploy dir and cd into it.
 dir=$(date +'%Y%m%d%H%M%S')
@@ -30,22 +33,26 @@ cd "$dir"
 # Do deployment (based on https://devdocs.prestashop-project.org/8/basics/installation/localhost/).
 git clone --branch $FORGE_SITE_BRANCH --depth 1 --recurse-submodules --shallow-submodules git@github.com:Ken-vdE/PrestaShop.git .
 #git submodule update --init --recursive
-rm -rf install-dev # For security
 
-./composer-install.sh --composer="$FORGE_COMPOSER" --prod
-
-cp "$mainDir/everwaresports.com-persistents/themes/falcon/_dev/webpack/.env" "$(pwd)/themes/falcon/_dev/webpack/.env"
-./npm-install.sh --prod
 
 mkdir log app/logs app/Resources/translations
 #TODO ADMIN_DIR variable?
 chmod -R +w admin-dev/autoupgrade app/config app/logs app/Resources/translations cache config download img log mails modules override themes translations upload var
 
+
+./composer-install.sh --composer="$FORGE_COMPOSER" --prod
+
+
+cp "$mainDir/everwaresports.com-persistents/themes/falcon/_dev/webpack/.env" "$(pwd)/themes/falcon/_dev/webpack/.env"
+./npm-install.sh --prod
+
+
+# If you want to update your modules, run `composer update prestashop/some-module` (don't use BackOffice updates/upgrade).
 persistentsDir="everwaresports.com-persistents"
 #tar -zcvf "$persistentsDir.bak.tar.gz" "$persistentsDir/"
 persistents=(
-    "admin-dev/themes/default" #TODO use $ADMIN_DIR
-    "admin-dev/themes/new-theme" #TODO use $ADMIN_DIR
+    "admin-dev/themes/default"
+    "admin-dev/themes/new-theme"
     "app/config/parameters.php"
     "app/config/parameters.yml"
     "app/logs"
@@ -53,7 +60,6 @@ persistents=(
     "config/settings.inc.php"
     "img"
     "mails"
-    "modules"
     "robots.txt"
     "translations"
     "upload"
@@ -73,6 +79,38 @@ for persistent in ${persistents[@]}; do
     fi
     ln -s "$actuallyStoredPersistentPath" "$freshlyClonedPersistentPath"
 done
+
+
+# Delete 'sensitive' unused files.
+sensitives=(
+    ".docker"
+    ".github"
+    "install-dev"
+    ".editorconfig"
+    ".php-cs-fixer.dist.php"
+    "CODE_OF_CONDUCT.md"
+    #"composer.json"
+    #"composer.lock"
+    #"composer-install.sh"
+    "CONTRIBUTING.md"
+    "CONTRIBUTORS.md"
+    "deploy.sh"
+    "docker-compose.yml"
+    "INSTALL.txt"
+    "LICENSE.txt"
+    #"Makefile"
+    #"npm-install.sh"
+    "phppsinfo.php"
+    "phpstan.neon.dist"
+    "README.md"
+)
+for sensitive in ${sensitives[@]}; do
+    rm -rf "$sensitive"
+done
+
+
+# Change the BackOffice path for security.
+mv "admin-dev" "baasdingen"
 
 
 # Move back to main directory

@@ -13,12 +13,6 @@
             "homepage": "https://contributors.prestashop.com/"
         }
     ],
-    "repositories": [
-      {
-        "type": "path",
-        "url": "./modules/ew_prestacustom"
-      }
-    ],
     "require": {
         "php": ">=7.2.5",
         "ext-curl": "*",
@@ -42,7 +36,6 @@
         "doctrine/cache": "^2.0",
         "doctrine/doctrine-bundle": "^2.3",
         "doctrine/orm": "^2.7",
-        "everware/ew_prestacustom": "dev-master",
         "ezyang/htmlpurifier": "dev-master as v4.14.0",
         "friendsofsymfony/jsrouting-bundle": "^2.4",
         "geoip2/geoip2": "~2.4.2",

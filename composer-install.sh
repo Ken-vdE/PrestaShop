@@ -31,6 +31,9 @@ $composer install $composerArgs
 
 wd=$(pwd)
 
+cd "$wd/modules/mollie"
+$composer install $composerArgs
+
 cd "$wd/modules/is_themecore"
 $composer install $composerArgs
 
@@ -41,7 +44,4 @@ cd "$wd/modules/is_searchbar"
 $composer install $composerArgs
 
 cd "$wd/modules/is_shoppingcart"
-$composer install $composerArgs
-
-cd "$wd/modules/mollie"
 $composer install $composerArgs

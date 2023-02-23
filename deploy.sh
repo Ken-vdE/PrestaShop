@@ -97,7 +97,7 @@ sensitives=(
     "deploy.sh"
     "docker-compose.yml"
     "INSTALL.txt"
-    "LICENSE.txt"
+    "LICENSE.md"
     #"Makefile"
     #"npm-install.sh"
     "phppsinfo.php"
@@ -111,6 +111,13 @@ done
 
 # Change the BackOffice path for security.
 mv "admin-dev" "baasdingen"
+
+
+# Run migrations etc.
+#$FORGE_PHP modules/autoupgrade/cli-upgrade.php --dir=baasdingen --channel=minor
+#$FORGE_PHP modules/autoupgrade/upgrade/upgrade.php
+$FORGE_PHP bin/console prestashop:schema:update-without-foreign
+
 
 
 # Move back to main directory

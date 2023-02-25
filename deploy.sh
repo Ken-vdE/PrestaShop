@@ -131,6 +131,7 @@ mv "$dir" everwaresports.com
 
 
 cd everwaresports.com
+# If this crashes, just `rm var/cache/prod`.
 $FORGE_PHP bin/console cache:clear --env=prod
 
 

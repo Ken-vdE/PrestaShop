@@ -5756,16 +5756,16 @@
         },
         {
             "name": "prestashop/ps_emailalerts",
-            "version": "v2.3.3",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_emailalerts.git",
-                "reference": "654f9509da88dda9e5e1703fc0b34ad8b4622c29"
+                "reference": "c0bc96ce8daf8178b3245647b663cbb955b45f85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_emailalerts/zipball/654f9509da88dda9e5e1703fc0b34ad8b4622c29",
-                "reference": "654f9509da88dda9e5e1703fc0b34ad8b4622c29",
+                "url": "https://api.github.com/repos/PrestaShop/ps_emailalerts/zipball/c0bc96ce8daf8178b3245647b663cbb955b45f85",
+                "reference": "c0bc96ce8daf8178b3245647b663cbb955b45f85",
                 "shasum": ""
             },
             "require": {
@@ -5788,9 +5788,9 @@
             "description": "PrestaShop module ps_emailalerts",
             "homepage": "https://github.com/PrestaShop/ps_emailalerts",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_emailalerts/tree/v2.3.3"
+                "source": "https://github.com/PrestaShop/ps_emailalerts/tree/v2.4.0"
             },
-            "time": "2022-03-11T08:17:10+00:00"
+            "time": "2022-11-15T14:53:41+00:00"
         },
         {
             "name": "prestashop/ps_emailsubscription",

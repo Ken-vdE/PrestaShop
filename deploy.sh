@@ -59,6 +59,7 @@ persistents=(
     "app/logs"
     "config/defines_custom.inc.php"
     "config/settings.inc.php"
+    "config/settings_custom.inc.php"
     "modules"
     "img"
     "mails"
@@ -75,7 +76,7 @@ for persistent in ${persistents[@]}; do
         # Note the / after source path (means put CONTENT of dir in target, don't put dir ITSELF in target).
         rsync -a --mkpath "$freshlyClonedPersistentPath/" "$actuallyStoredPersistentPath"
     # If is file and file does not yet exists in persistent storage, move (not copy for perf) to persistent storage.
-    elif [ ! -e "$actuallyStoredPersistentPath" ]; then
+    elif [ -f "$freshlyClonedPersistentPath" ] && [ ! -e "$actuallyStoredPersistentPath" ]; then
         mkdir -p "$actuallyStoredPersistentPath/.." # Make sure dir exists.
         mv "$freshlyClonedPersistentPath" "$actuallyStoredPersistentPath"
     fi

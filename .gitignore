@@ -1,6 +1,8 @@
 .idea
 phppsinfo.php
 nginx.conf
+nginx.prod.conf
+nginx.dev.conf
 
 # Cache, temp and personal files
 
@@ -138,6 +140,7 @@ themes/*-chunk.js.map
 
 config/defines_custom.inc.php
 config/settings.inc.php
+config/settings_custom.inc.php
 config/settings.old.php
 config/xml/*
 config/themes/*

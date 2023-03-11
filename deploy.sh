@@ -1,8 +1,5 @@
-# Original:
-#cd /home/everwaresportscom/everwaresports.com
+#cd /home/your-user/your-site.com
 #git pull origin $FORGE_SITE_BRANCH
-#
-#git submodule update --init --recursive
 #
 #$FORGE_COMPOSER install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 #
@@ -15,8 +12,10 @@
 set -euxo pipefail
 
 
-cd /home/everwaresportscom
-mainDir=$(pwd)
+cd "$FORGE_SITE_PATH"
+domain="${PWD##*/}" # some-site.com
+cd ..
+mainPath="$(pwd)" # /home/your-user
 
 
 # Delete previously failed deployments.
@@ -25,13 +24,13 @@ find . -maxdepth 1 -type d -name "$(date +'%Y')[0-9][0-9][0-9][0-9][0-9][0-9][0-
 
 
 # Create new deploy dir and cd into it.
-dir=$(date +'%Y%m%d%H%M%S')
-mkdir "$dir"
-cd "$dir"
+releaseDir=$(date +'%Y%m%d%H%M%S')
+mkdir "$releaseDir"
+cd "$releaseDir"
 
 
 # Do deployment (based on https://devdocs.prestashop-project.org/8/basics/installation/localhost/).
-git clone --branch $FORGE_SITE_BRANCH --depth 1 --recurse-submodules --shallow-submodules git@github.com:Ken-vdE/PrestaShop.git .
+git clone --branch "$FORGE_SITE_BRANCH" --depth 1 --recurse-submodules --shallow-submodules git@github.com:Ken-vdE/PrestaShop.git .
 #git submodule update --init --recursive
 
 
@@ -43,13 +42,15 @@ chmod -R +w admin-dev/autoupgrade app/config app/logs app/Resources/translations
 ./composer-install.sh --composer="$FORGE_COMPOSER" --prod
 
 
-cp "$mainDir/everwaresports.com-persistents/themes/falcon/_dev/webpack/.env" "$(pwd)/themes/falcon/_dev/webpack/.env"
+## Outdated: If you want to update your modules, run `composer update prestashop/some-module` (don't use BackOffice updates/upgrade).
+persistentsDirName="$domain-persistents"
+
+
+cp "$mainPath/$persistentsDirName/themes/falcon/_dev/webpack/.env" "$(pwd)/themes/falcon/_dev/webpack/.env"
 ./npm-install.sh --prod
 
 
-# If you want to update your modules, run `composer update prestashop/some-module` (don't use BackOffice updates/upgrade).
-persistentsDir="everwaresports.com-persistents"
-#tar -zcvf "$persistentsDir.bak.tar.gz" "$persistentsDir/"
+#tar -zcvf "$persistentsDirName.bak.tar.gz" "$persistentsDirName/"
 persistents=(
     "admin-dev/themes/default"
     "admin-dev/themes/new-theme"
@@ -58,6 +59,7 @@ persistents=(
     "app/logs"
     "config/defines_custom.inc.php"
     "config/settings.inc.php"
+    "modules"
     "img"
     "mails"
     "robots.txt"
@@ -67,13 +69,18 @@ persistents=(
 )
 for persistent in ${persistents[@]}; do
     freshlyClonedPersistentPath="$(pwd)/$persistent"
-    actuallyStoredPersistentPath="$mainDir/$persistentsDir/$persistent"
-    # Copy (new) git files to persistent stored directories.
+    actuallyStoredPersistentPath="$mainPath/$persistentsDirName/$persistent"
+    # If is directory, rsync files to to persistent dir (creates dir if not exists).
     if [ -d "$freshlyClonedPersistentPath" ]; then
-        # Note the / after source path (means put content of dir in target, not dir itself).
+        # Note the / after source path (means put CONTENT of dir in target, don't put dir ITSELF in target).
         rsync -a --mkpath "$freshlyClonedPersistentPath/" "$actuallyStoredPersistentPath"
+    # If is file and file does not yet exists in persistent storage, move (not copy for perf) to persistent storage.
+    elif [ ! -e "$actuallyStoredPersistentPath" ]; then
+        mkdir -p "$actuallyStoredPersistentPath/.." # Make sure dir exists.
+        mv "$freshlyClonedPersistentPath" "$actuallyStoredPersistentPath"
     fi
-    # Remove current item in new deployment (if exists) and add symlink to persistent stored item.
+
+    # Remove current item in new deployment (if (still) exists) and add symlink to persistent stored item.
     if [ -e "$freshlyClonedPersistentPath" ]; then
         rm -rf "$freshlyClonedPersistentPath"
     fi
@@ -123,14 +130,14 @@ $FORGE_PHP bin/console prestashop:schema:update-without-foreign
 # Move back to main directory
 cd ..
 # Delete previous backup.
-[ -d everwaresports.com.bak ] && rm -rf everwaresports.com.bak
+[ -d "$domain.bak" ] && rm -rf "$domain.bak"
 # Backup previous deployment.
-mv everwaresports.com everwaresports.com.bak
+mv "$domain" "$domain.bak"
 # Finalize and activate deployment.
-mv "$dir" everwaresports.com
+mv "$releaseDir" "$domain"
 
 
-cd everwaresports.com
+cd "$domain"
 # If this crashes, just `rm var/cache/prod`.
 $FORGE_PHP bin/console cache:clear --env=prod
 

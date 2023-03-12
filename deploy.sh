@@ -47,6 +47,7 @@ persistentsDirName="$domain-persistents"
 
 
 cp "$mainPath/$persistentsDirName/themes/falcon/_dev/webpack/.env" "$(pwd)/themes/falcon/_dev/webpack/.env"
+cp "$mainPath/$persistentsDirName/themes/falcon/_dev/js/sentry.js" "$(pwd)/themes/falcon/_dev/js/sentry.js"
 ./npm-install.sh --prod
 
 

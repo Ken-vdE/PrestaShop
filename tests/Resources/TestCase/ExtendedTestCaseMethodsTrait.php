@@ -24,46 +24,40 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace Tests\Unit\Classes\Tax;
+namespace Tests\Resources\TestCase;
 
-use PHPUnit\Framework\TestCase;
-use Tax;
-use TaxCalculator;
-use Tests\Resources\TestCase\ExtendedTestCaseMethodsTrait;
+use PHPUnit\Framework\Assert;
 
-class TaxCalculatorCoreTest extends TestCase
+trait ExtendedTestCaseMethodsTrait
 {
-    use ExtendedTestCaseMethodsTrait;
-
-    public function testGetTotalRateOK()
+    private function compareWithEpsilon($expected, $actual, $message)
     {
-        $tax = new Tax();
-        $tax->rate = 20.6;
-        $tax2 = new Tax();
-        $tax2->rate = 5.5;
+        $success = false;
 
-        $tax_calculator = new TaxCalculator([
-            $tax, $tax2,
-        ], TaxCalculator::COMBINE_METHOD);
+        // see https://github.com/sebastianbergmann/phpunit/issues/4966#issuecomment-1367081755
+        if (abs($expected - $actual) < 10 ** -ini_get('precision')) {
+            $success = true;
+        }
 
-        $totalRate = $tax_calculator->getTotalRate();
-
-        $this->assertEquals(26.1, $totalRate);
+        Assert::assertTrue($success, $message);
     }
 
-    public function testGetTotalRateBug()
+    public function assertEqualsWithEpsilon($expected, $actual, $message = '')
     {
-        $tax = new Tax();
-        $tax->rate = 20.6;
-        $tax2 = new Tax();
-        $tax2->rate = 5.5;
+        if (!is_array($expected)) {
+            $expectedArray[]['a'] = $expected; // we recreate the structure of the array as in Tools::spreadAmount()
+        } else {
+            $expectedArray = $expected;
+        }
 
-        $tax_calculator = new TaxCalculator([
-            $tax, $tax2,
-        ], TaxCalculator::ONE_AFTER_ANOTHER_METHOD);
+        if (!is_array($actual)) {
+            $actualArray[]['a'] = $actual; // we recreate the structure of the array as in Tools::spreadAmount()
+        } else {
+            $actualArray = $actual;
+        }
 
-        $totalRate = $tax_calculator->getTotalRate();
-
-        $this->assertEqualsWithEpsilon(27.233, $totalRate);
+        foreach ($expectedArray as $key => $item) {
+            $this->compareWithEpsilon($item['a'], $actualArray[$key]['a'], $message);
+        }
     }
 }

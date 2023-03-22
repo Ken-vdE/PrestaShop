@@ -2299,6 +2299,7 @@ class AdminImportControllerCore extends AdminController
                     }
                 }
                 // <custom>
+                //TODO What if all features were removed from csv?
                 if (!empty($inserted_feature_values)) {
                     $wheres = join(', ' , array_map(function($tuple) {
                         return '(' . join(', ', array_map('intval', $tuple)) . ')';

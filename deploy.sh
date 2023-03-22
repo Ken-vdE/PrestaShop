@@ -12,7 +12,8 @@
 set -euxo pipefail
 
 
-cd "$FORGE_SITE_PATH"
+cd "$FORGE_SITE_PATH" # /home/your-user/some-site.com
+
 domain="${PWD##*/}" # some-site.com
 cd ..
 mainPath="$(pwd)" # /home/your-user
@@ -31,18 +32,24 @@ cd "$releaseDir"
 
 # Do deployment (based on https://devdocs.prestashop-project.org/8/basics/installation/localhost/).
 git clone --branch "$FORGE_SITE_BRANCH" --depth 1 --recurse-submodules --shallow-submodules git@github.com:Ken-vdE/PrestaShop.git .
-#git submodule update --init --recursive
 
 
 mkdir log app/logs app/Resources/translations
-#TODO ADMIN_DIR variable?
 chmod -R +w admin-dev/autoupgrade app/config app/logs app/Resources/translations cache config download img log mails modules override themes translations upload var
 
 
 ./composer-install.sh --composer="$FORGE_COMPOSER" --prod
 
 
-## Outdated: If you want to update your modules, run `composer update prestashop/some-module` (don't use BackOffice updates/upgrade).
+# Modules use PHP and therefor can't use symlinked dirs (see comment at $persistents below).
+# So rsync the the live modules dir into this new modules directory (only the dirs and files that don't exist yet).
+# This way we keep the modules in an actual directory instead of symlinking it like $persistents below.
+# We --ignore-existing so only subdirectories that don't exist yet in newly installed modules dir get copied.
+# Note the / after source path (means put CONTENT of dir in target, don't put dir ITSELF in target).
+# NOTE If you've deleted git submodules, those persist. So you have to delete those manually after a deployment.
+rsync -a --mkpath --ignore-existing "$FORGE_SITE_PATH/modules/" "modules"
+
+
 persistentsDirName="$domain-persistents"
 
 
@@ -51,7 +58,11 @@ cp "$mainPath/$persistentsDirName/themes/falcon/_dev/js/sentry.js" "$(pwd)/theme
 ./npm-install.sh --prod
 
 
-#tar -zcvf "$persistentsDirName.bak.tar.gz" "$persistentsDirName/"
+# Note that PHP does not always play well with symlinked directories (or files?).
+# E.g. using __DIR__ inside a php file that resides in a symlinked directory, returns the original directory
+# instead of the symlinked directory that was used to include the php file.
+# So make sure you're not symlinking directories (or files?) with complex PHP files in them.
+# If so, there is a big chance Prestashop uses __DIR__ to include files and that breaks stuff.
 persistents=(
     "admin-dev/themes/default"
     "admin-dev/themes/new-theme"
@@ -61,13 +72,14 @@ persistents=(
     "config/defines_custom.inc.php"
     "config/settings.inc.php"
     "config/settings_custom.inc.php"
-    "modules"
     "img"
     "mails"
     "robots.txt"
     "translations"
     "upload"
-    "var"
+    "var/logs"
+    "var/modules"
+    "var/sessions"
 )
 for persistent in ${persistents[@]}; do
     freshlyClonedPersistentPath="$(pwd)/$persistent"

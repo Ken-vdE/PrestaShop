@@ -2293,8 +2293,25 @@ class AdminImportControllerCore extends AdminController
                         }
                         $id_feature_value = (int) FeatureValue::addFeatureValueImport($id_feature, $feature_value, $id_product, $id_lang, $custom);
                         Product::addFeatureProductImport($product->id, $id_feature, $id_feature_value);
+                        // <custom>
+                        $inserted_feature_values[] = [$id_feature, $id_feature_value];
+                        // </custom>
                     }
                 }
+                // <custom>
+                if (!empty($inserted_feature_values)) {
+                    $wheres = join(', ' , array_map(function($tuple) {
+                        return '(' . join(', ', array_map('intval', $tuple)) . ')';
+                    }, $inserted_feature_values));
+
+                    $db_prefix = _DB_PREFIX_;
+                    Db::getInstance()->execute(<<<SQL
+                        DELETE FROM `{$db_prefix}feature_product`
+                        WHERE `id_product` = $product->id
+                        AND (`id_feature`, `id_feature_value`) NOT IN ($wheres)
+                        SQL);
+                }
+                // </custom>
             }
             // clean feature positions to avoid conflict
             Feature::cleanPositions();

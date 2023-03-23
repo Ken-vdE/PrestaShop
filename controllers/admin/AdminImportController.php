@@ -2298,22 +2298,22 @@ class AdminImportControllerCore extends AdminController
                         // </custom>
                     }
                 }
-                // <custom>
-                //TODO What if all features were removed from csv?
-                if (!empty($inserted_feature_values)) {
-                    $wheres = join(', ' , array_map(function($tuple) {
-                        return '(' . join(', ', array_map('intval', $tuple)) . ')';
-                    }, $inserted_feature_values));
-
-                    $db_prefix = _DB_PREFIX_;
-                    Db::getInstance()->execute(<<<SQL
-                        DELETE FROM `{$db_prefix}feature_product`
-                        WHERE `id_product` = $product->id
-                        AND (`id_feature`, `id_feature_value`) NOT IN ($wheres)
-                        SQL);
-                }
-                // </custom>
             }
+            // <custom>
+            if (!$validateOnly && $id_product) {
+                $db_prefix = _DB_PREFIX_;
+                $sql = "DELETE FROM `{$db_prefix}feature_product` WHERE `id_product` = $id_product";
+                if (!empty($inserted_feature_values)) {
+                    $sql .= sprintf(
+                        ' AND (`id_feature`, `id_feature_value`) NOT IN (%s)',
+                        join(', ' , array_map(function($tuple) {
+                            return sprintf('(%s)', join(', ', array_map('intval', $tuple)));
+                        }, $inserted_feature_values))
+                    );
+                }
+                Db::getInstance()->execute($sql);
+            }
+            // </custom>
             // clean feature positions to avoid conflict
             Feature::cleanPositions();
 

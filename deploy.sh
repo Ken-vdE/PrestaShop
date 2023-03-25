@@ -130,6 +130,10 @@ for sensitive in ${sensitives[@]}; do
 done
 
 
+# Based on `curl -sS "https://your-site.test/modules/gsitemap/gsitemap-cron.php?token=s0m3t0k3n&id_shop=1"`
+$FORGE_PHP modules/gsitemap/gsitemap-cron.php
+
+
 # Change the BackOffice path for security.
 mv "admin-dev" "baasdingen"
 

@@ -2300,7 +2300,12 @@ class AdminImportControllerCore extends AdminController
                 }
             }
             // <custom>
-            if (!$validateOnly && $id_product) {
+            /** Only clear features if the features column was present in import.
+              * As long as product default values {@see AdminImportControllerCore::setEntityDefaultValues()},
+              * the product definition[fields] {@see ProductCore::$definition}
+              * and {@see $info} (the actual import data) don't contain 'features'
+              * they should not be present in the $features array. */
+            if (!$validateOnly && $id_product && array_key_exists('features', $features)) {
                 $db_prefix = _DB_PREFIX_;
                 $sql = "DELETE FROM `{$db_prefix}feature_product` WHERE `id_product` = $id_product";
                 if (!empty($inserted_feature_values)) {

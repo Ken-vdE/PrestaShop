@@ -201,41 +201,44 @@ class CartRuleCalculator
                 /** @var \CartRuleCore $cartRule */
                 /** @var string[] $selected_products "id_product-id_product_attribute" */
                 $selected_products = $cartRule->checkProductRestrictionsFromCart($cart, true);
-                /** @var CartRow[] $sorted_eligible_cart_rows */
-                $sorted_eligible_cart_rows = array_filter(iterator_to_array($this->cartRows), function($cartRow) use($cartRule, $selected_products) {
-                    /** @var CartRow $cartRow */
-                    $product = $cartRow->getRowData();
-                    return (
-                        in_array("$product[id_product]-$product[id_product_attribute]", $selected_products)
-                        || in_array("$product[id_product]-0", $selected_products)
-                    ) && (
-                        ($cartRule->reduction_exclude_special && !$product['reduction_applies'])
-                        || !$cartRule->reduction_exclude_special
-                    );
-                });
-                usort($sorted_eligible_cart_rows, function($cartRowA, $cartRowB) {
-                    /** {@var CartRow $cartRowA} {@var CartRow $cartRowB} */
-                    return $cartRowA->getInitialUnitPrice()->getTaxIncluded() - $cartRowB->getInitialUnitPrice()->getTaxIncluded();
-                });
 
-                $product_rule_groups = $cartRule->getProductRuleGroups();
-                $first_product_rule_group = reset($product_rule_groups);
-                $n = $first_product_rule_group ? $first_product_rule_group['quantity'] : 0;
-                if ($n) {
-                    $total_quantities = array_sum(array_map(fn($cartRow) => $cartRow->getRowData()['cart_quantity'], $sorted_eligible_cart_rows));
-                    $total_to_be_discounted = floor($total_quantities / $n);
-                    $total_already_discounted = 0;
-                    foreach ($sorted_eligible_cart_rows as $eligible_cart_row) {
-                        for ($j = 0; $j < $eligible_cart_row->getRowData()['cart_quantity']; $j++) {
-                            /** Based on @see CartRow::applyPercentageDiscount() */
-                            $discountTaxIncluded = $eligible_cart_row->getInitialUnitPrice()->getTaxIncluded() * $cartRule->reduction_percent / 100;
-                            $discountTaxExcluded = $eligible_cart_row->getInitialUnitPrice()->getTaxExcluded() * $cartRule->reduction_percent / 100;
-                            $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
-                            $eligible_cart_row->applyFlatDiscount($amount);
-                            $cartRuleData->addDiscountApplied($amount);
-                            $total_already_discounted += 1;
-                            if ($total_already_discounted >= $total_to_be_discounted) {
-                                break 2;
+                if (is_array($selected_products)) {
+                    /** @var CartRow[] $sorted_eligible_cart_rows */
+                    $sorted_eligible_cart_rows = array_filter(iterator_to_array($this->cartRows), function($cartRow) use($cartRule, $selected_products) {
+                        /** @var CartRow $cartRow */
+                        $product = $cartRow->getRowData();
+                        return (
+                            in_array("$product[id_product]-$product[id_product_attribute]", $selected_products)
+                            || in_array("$product[id_product]-0", $selected_products)
+                        ) && (
+                            ($cartRule->reduction_exclude_special && !$product['reduction_applies'])
+                            || !$cartRule->reduction_exclude_special
+                        );
+                    });
+                    usort($sorted_eligible_cart_rows, function($cartRowA, $cartRowB) {
+                        /** {@var CartRow $cartRowA} {@var CartRow $cartRowB} */
+                        return $cartRowA->getInitialUnitPrice()->getTaxIncluded() - $cartRowB->getInitialUnitPrice()->getTaxIncluded();
+                    });
+
+                    $product_rule_groups = $cartRule->getProductRuleGroups();
+                    $first_product_rule_group = reset($product_rule_groups);
+                    $n = $first_product_rule_group ? $first_product_rule_group['quantity'] : 0;
+                    if ($n) {
+                        $total_quantities = array_sum(array_map(fn($cartRow) => $cartRow->getRowData()['cart_quantity'], $sorted_eligible_cart_rows));
+                        $total_to_be_discounted = floor($total_quantities / $n);
+                        $total_already_discounted = 0;
+                        foreach ($sorted_eligible_cart_rows as $eligible_cart_row) {
+                            for ($j = 0; $j < $eligible_cart_row->getRowData()['cart_quantity']; $j++) {
+                                /** Based on @see CartRow::applyPercentageDiscount() */
+                                $discountTaxIncluded = $eligible_cart_row->getInitialUnitPrice()->getTaxIncluded() * $cartRule->reduction_percent / 100;
+                                $discountTaxExcluded = $eligible_cart_row->getInitialUnitPrice()->getTaxExcluded() * $cartRule->reduction_percent / 100;
+                                $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
+                                $eligible_cart_row->applyFlatDiscount($amount);
+                                $cartRuleData->addDiscountApplied($amount);
+                                $total_already_discounted += 1;
+                                if ($total_already_discounted >= $total_to_be_discounted) {
+                                    break 2;
+                                }
                             }
                         }
                     }

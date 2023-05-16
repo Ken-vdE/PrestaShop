@@ -13,6 +13,7 @@ while [ $# -gt 0 ]; do
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
             [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+            # Use `brew unlink node && brew link node@14` to switch on MacOS.
             nvm use 14
             ;;
         *)

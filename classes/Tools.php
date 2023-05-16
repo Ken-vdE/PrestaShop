@@ -26,6 +26,8 @@
 use Composer\CaBundle\CaBundle;
 use PHPSQLParser\PHPSQLParser;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -3325,6 +3327,24 @@ exit;
      * @param string $env
      */
     public static function clearSf2Cache($env = null)
+    {
+        // This is the legacy method to clear Symfony cache, but it can result in unexpected behaviour with Container rebuild
+        // it should not be used anymore and will be removed. Until then, it fallbacks on the proper SymfonyCacheClearer service
+        $container = SymfonyContainer::getInstance();
+        if (null === $container) {
+            self::removeSymfonyCache($env);
+
+            return;
+        }
+
+        /** @var CacheClearerInterface|null $symfonyCacheClearer */
+        $symfonyCacheClearer = $container->get('prestashop.adapter.cache.clearer.symfony_cache_clearer');
+        if ($symfonyCacheClearer) {
+            $symfonyCacheClearer->clear();
+        }
+    }
+
+    private static function removeSymfonyCache(?string $env = null): void
     {
         if (null === $env) {
             $env = _PS_ENV_;

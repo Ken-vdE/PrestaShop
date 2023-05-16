@@ -217,13 +217,6 @@ class ModuleController extends ModuleAbstractController
                 $args[] = (bool) ($request->request->get('actionParams', [])['deletion'] ?? false);
                 $response[$module]['refresh_needed'] = $this->moduleNeedsReload($moduleRepository->getModule($module));
             }
-            $systemCacheClearEnabled = filter_var(
-                $request->request->get('actionParams', [])['cacheClearEnabled'] ?? true,
-                FILTER_VALIDATE_BOOLEAN
-            );
-            if (!$systemCacheClearEnabled) {
-                $moduleManager->disableSystemClearCache();
-            }
             $response[$module]['status'] = call_user_func([$moduleManager, $action], ...$args);
         } catch (Exception $e) {
             $response[$module]['status'] = false;
@@ -367,9 +360,13 @@ class ModuleController extends ModuleAbstractController
 
             $moduleName = $zipSource->getModuleName($fileUploaded->getPathname());
 
+            $moduleWasAlreadyInstalled = $moduleManager->isInstalled($moduleName);
+            $installationResult = $moduleManager->install($moduleName, $fileUploaded->getPathname());
+
             // Install the module
             $installationResponse = [
-                'status' => $moduleManager->install($moduleName, $fileUploaded->getPathname()),
+                'status' => $installationResult,
+                'upgraded' => $installationResult && $moduleWasAlreadyInstalled,
                 'msg' => '',
                 'module_name' => $moduleName,
             ];

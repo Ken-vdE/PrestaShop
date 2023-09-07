@@ -16,3 +16,6 @@
 [submodule "modules/mollie"]
 	path = modules/mollie
 	url = git@github.com:mollie/PrestaShop1.7.git
+[submodule "modules/is_imageslider"]
+	path = modules/is_imageslider
+	url = git@github.com:Oksydan/is_imageslider.git

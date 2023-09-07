@@ -2185,9 +2185,32 @@ class AdminImportControllerCore extends AdminController
                         }
                         $id_feature_value = (int) FeatureValue::addFeatureValueImport($id_feature, $feature_value, $id_product, $id_lang, $custom);
                         Product::addFeatureProductImport($product->id, $id_feature, $id_feature_value);
+                        // <custom>
+                        $inserted_feature_values[] = [$id_feature, $id_feature_value];
+                        // </custom>
                     }
                 }
             }
+            // <custom>
+            /** Only clear features if the features column was present in import.
+              * As long as product default values {@see AdminImportControllerCore::setEntityDefaultValues()},
+              * the product definition[fields] {@see ProductCore::$definition}
+              * and {@see $info} (the actual import data) don't contain 'features'
+              * they should not be present in the $features array. */
+            if (!$validateOnly && $id_product && array_key_exists('features', $features)) {
+                $db_prefix = _DB_PREFIX_;
+                $sql = "DELETE FROM `{$db_prefix}feature_product` WHERE `id_product` = $id_product";
+                if (!empty($inserted_feature_values)) {
+                    $sql .= sprintf(
+                        ' AND (`id_feature`, `id_feature_value`) NOT IN (%s)',
+                        join(', ' , array_map(function($tuple) {
+                            return sprintf('(%s)', join(', ', array_map('intval', $tuple)));
+                        }, $inserted_feature_values))
+                    );
+                }
+                Db::getInstance()->execute($sql);
+            }
+            // </custom>
             // clean feature positions to avoid conflict
             Feature::cleanPositions();
 

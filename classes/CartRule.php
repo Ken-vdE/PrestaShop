@@ -1324,6 +1324,55 @@ class CartRuleCore extends ObjectModel
                 $reduction_value += $selected_products_reduction * $this->reduction_percent / 100;
             }
 
+            // <custom>
+            /** Also @see CartRuleCalculator::applyCartRule() */
+            // Discount (%) on every (cheapest) nth product
+            if ((float) $this->reduction_percent && $this->reduction_product == -3) {
+                /** @var string[] $selected_products "id_product-id_product_attribute" */
+                $selected_products = $this->checkProductRestrictionsFromCart($context->cart, true);
+
+                if (is_array($selected_products)) {
+                    /** @var CartRow[] $sorted_eligible_cart_rows */
+                    $sorted_eligible_cart_rows = array_filter($package_products, function($product) use($selected_products) {
+                        return (
+                            in_array("$product[id_product]-$product[id_product_attribute]", $selected_products)
+                            || in_array("$product[id_product]-0", $selected_products)
+                        ) && (
+                            ($this->reduction_exclude_special && !$product['reduction_applies'])
+                            || !$this->reduction_exclude_special
+                        );
+                    });
+                    usort($sorted_eligible_cart_rows, function($productA, $productB) use($use_tax) {
+                        /** Based on previous discount if
+                         * and {@see CartRow::processCalculation()} from {@see Calculator::processCalculation()} */
+                        $priceA = $use_tax ? $productA['price_without_reduction'] : $productA['price'];
+                        $priceB = $use_tax ? $productB['price_without_reduction'] : $productB['price'];
+                        return $priceA - $priceB;
+                    });
+
+                    $product_rule_groups = $this->getProductRuleGroups();
+                    $first_product_rule_group = reset($product_rule_groups);
+                    $n = $first_product_rule_group ? $first_product_rule_group['quantity'] : 0;
+                    if ($n) {
+                        $total_quantities = array_sum(array_map(fn($cartRow) => $cartRow['cart_quantity'], $sorted_eligible_cart_rows));
+                        $total_to_be_discounted = floor($total_quantities / $n);
+                        $total_already_discounted = 0;
+                        foreach ($sorted_eligible_cart_rows as $eligible_cart_row) {
+                            for ($j = 0; $j < $eligible_cart_row['cart_quantity']; $j++) {
+                                /** Based on @see CartRow::applyPercentageDiscount() */
+                                $discount = $eligible_cart_row[$use_tax ? 'price_without_reduction' : 'price'] * $this->reduction_percent / 100;
+                                $reduction_value += $discount;
+                                $total_already_discounted += 1;
+                                if ($total_already_discounted >= $total_to_be_discounted) {
+                                    break 2;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // </custom>
+
             // Discount (¤)
             if ((float) $this->reduction_amount > 0) {
                 $prorata = 1;

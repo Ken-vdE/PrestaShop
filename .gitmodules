@@ -1,0 +1,21 @@
+[submodule "themes/falcon"]
+	path = themes/falcon
+	url = git@github.com:Ken-vdE/falcon.git
+[submodule "modules/is_themecore"]
+	path = modules/is_themecore
+	url = git@github.com:Oksydan/is_themecore.git
+[submodule "modules/is_searchbar"]
+	path = modules/is_searchbar
+	url = git@github.com:Oksydan/is_searchbar.git
+[submodule "modules/is_shoppingcart"]
+	path = modules/is_shoppingcart
+	url = git@github.com:Oksydan/is_shoppingcart.git
+[submodule "modules/ew_custom"]
+	path = modules/ew_prestacustom
+	url = git@github.com:Ken-vdE/ew_custom.git
+[submodule "modules/mollie"]
+	path = modules/mollie
+	url = git@github.com:mollie/PrestaShop1.7.git
+[submodule "modules/is_imageslider"]
+	path = modules/is_imageslider
+	url = git@github.com:Oksydan/is_imageslider.git

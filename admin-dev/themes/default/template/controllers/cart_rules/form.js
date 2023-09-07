@@ -128,9 +128,17 @@ $('#product_restriction').change(function () {
   if ($(this).prop('checked')) {
     $('#apply_discount_to_selection').prop('disabled', false);
     $('#apply_discount_to_selection_warning').hide();
+    // <custom>
+    $('#apply_discount_to_nth').prop('disabled', false);
+    $('#apply_discount_to_nth_warning').hide();
+    // </custom>
   } else {
     $('#apply_discount_to_selection').prop('disabled', true);
     $('#apply_discount_to_selection_warning').show();
+    // <custom>
+    $('#apply_discount_to_nth').prop('disabled', true);
+    $('#apply_discount_to_nth_warning').show();
+    // </custom>
   }
 });
 
@@ -139,6 +147,13 @@ $('#apply_discount_to_selection_shortcut').click((e) => {
   $('#product_restriction').focus();
   e.preventDefault();
 });
+// <custom>
+$('#apply_discount_to_nth_shortcut').click((e) => {
+  displayCartRuleTab('conditions');
+  $('#product_restriction').focus();
+  e.preventDefault();
+});
+// </custom>
 
 function toggleApplyDiscount(percent, amount, apply_to) {
   if (percent) {
@@ -189,6 +204,9 @@ function toggleApplyDiscountTo() {
     if ($('#apply_discount_to_order').prop('checked')) $('#reduction_product').val('0');
     if ($('#apply_discount_to_cheapest').prop('checked')) $('#reduction_product').val('-1');
     if ($('#apply_discount_to_selection').prop('checked')) $('#reduction_product').val('-2');
+    // <custom>
+    if ($('#apply_discount_to_nth').prop('checked')) $('#reduction_product').val('-3');
+    // </custom>
   }
 }
 
@@ -239,6 +257,14 @@ $('#apply_discount_to_selection').click(() => {
 },
 );
 if ($('#apply_discount_to_selection').prop('checked')) toggleApplyDiscountTo();
+
+// <custom>
+$('#apply_discount_to_nth').click(() => {
+  toggleApplyDiscountTo();
+},
+);
+if ($('#apply_discount_to_nth').prop('checked')) toggleApplyDiscountTo();
+// </custom>
 
 $('#free_gift_on').click(() => {
   toggleGiftProduct();

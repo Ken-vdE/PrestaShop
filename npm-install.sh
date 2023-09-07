@@ -14,7 +14,7 @@ while [ $# -gt 0 ]; do
             [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
             # Use `brew unlink node && brew link node@14` to switch on MacOS.
-            nvm use 14
+            nvm use 16
             ;;
         *)
             printf "***************************\n"
@@ -40,5 +40,7 @@ wd=$(pwd)
 #npm run build
 
 cd "$wd/themes/falcon/_dev"
-npm install
-npm run build
+#npm install
+#npm run build
+yarn install
+yarn build

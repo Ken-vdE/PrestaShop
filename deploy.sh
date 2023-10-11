@@ -40,6 +40,9 @@ chmod -R +w admin-dev/autoupgrade app/config app/logs app/Resources/translations
 
 ./composer-install.sh --composer="$FORGE_COMPOSER" --prod
 
+( flock -w 10 9 || exit 1
+    echo 'Restarting FPM...'; sudo -S service $FORGE_PHP_FPM reload ) 9>/tmp/fpmlock
+
 
 # Modules use PHP and therefor can't use symlinked dirs (see comment at $persistents below).
 # So rsync the the live modules dir into this new modules directory (only the dirs and files that don't exist yet).
@@ -158,7 +161,3 @@ mv "$releaseDir" "$domain"
 cd "$domain"
 # If this crashes, just `rm var/cache/prod`.
 $FORGE_PHP bin/console cache:clear --env=prod
-
-
-( flock -w 10 9 || exit 1
-    echo 'Restarting FPM...'; sudo -S service $FORGE_PHP_FPM reload ) 9>/tmp/fpmlock

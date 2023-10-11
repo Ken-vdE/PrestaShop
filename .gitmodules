@@ -19,3 +19,6 @@
 [submodule "modules/mollie"]
 	path = modules/mollie
 	url = git@github.com:mollie/PrestaShop.git
+[submodule "modules/autoupgrade"]
+	path = modules/autoupgrade
+	url = https://github.com/PrestaShop/autoupgrade.git

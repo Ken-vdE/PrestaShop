@@ -29,6 +29,8 @@ class CreateProduct extends BOBasePage {
 
   private readonly productActiveSwitchButton: string;
 
+  private readonly productActiveSwitchButtonToggleInput: string;
+
   private readonly productHeaderSummary: string;
 
   private readonly productHeaderTaxExcluded: string;
@@ -76,7 +78,8 @@ class CreateProduct extends BOBasePage {
 
     // Header selectors
     this.productNameInput = '#product_header_name_1';
-    this.productActiveSwitchButton = '#product_header_active_1';
+    this.productActiveSwitchButton = '#product_header_active.ps-switch';
+    this.productActiveSwitchButtonToggleInput = `${this.productActiveSwitchButton} input`;
     this.productHeaderSummary = '.product-header-summary';
     this.productHeaderTaxExcluded = `${this.productHeaderSummary} div[data-role=price-tax-excluded]`;
     this.productHeaderTaxIncluded = `${this.productHeaderSummary} div[data-role=price-tax-included]`;
@@ -134,8 +137,30 @@ class CreateProduct extends BOBasePage {
    * @param status {boolean} The product status
    * @returns {Promise<void>}
    */
-  async setProductStatus(page: Page, status: boolean): Promise<void> {
-    await this.setChecked(page, this.productActiveSwitchButton, status);
+  async setProductStatus(page: Page, status: boolean): Promise<boolean> {
+    if (await this.getProductStatus(page) !== status) {
+      await this.clickAndWaitForLoadState(page, this.productActiveSwitchButton);
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Get product status
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async getProductStatus(page: Page): Promise<boolean> {
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.productActiveSwitchButtonToggleInput}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -174,7 +199,7 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<string>}
    */
   async saveProduct(page: Page): Promise<string> {
-    await this.clickAndWaitForNavigation(page, this.saveProductButton);
+    await this.clickAndWaitForLoadState(page, this.saveProductButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -199,7 +224,7 @@ class CreateProduct extends BOBasePage {
     const textBody = await this.getTextContent(newPage, 'body');
 
     if (textBody.includes('[Debug] This page has moved')) {
-      await this.clickAndWaitForNavigation(newPage, 'a');
+      await this.clickAndWaitForURL(newPage, 'a');
     }
     return newPage;
   }
@@ -213,7 +238,7 @@ class CreateProduct extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.footerProductDropDown);
     await this.waitForSelectorAndClick(page, this.deleteProductButton);
     await this.waitForVisibleSelector(page, this.deleteProductFooterModal);
-    await this.clickAndWaitForNavigation(page, this.deleteProductSubmitButton);
+    await this.clickAndWaitForURL(page, this.deleteProductSubmitButton);
 
     return productsPage.getAlertSuccessBlockParagraphContent(page);
   }
@@ -224,7 +249,7 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToCatalogPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.goToCatalogButton);
+    await this.clickAndWaitForURL(page, this.goToCatalogButton);
   }
 
   /**
@@ -260,9 +285,11 @@ class CreateProduct extends BOBasePage {
    * @returns {Promise<void>}
    */
   async chooseProductType(page: Page, productType: string): Promise<void> {
+    const currentUrl: string = page.url();
+
     await productsPage.selectProductType(page, productType);
     await productsPage.clickOnAddNewProduct(page);
-    await page.waitForNavigation({waitUntil: 'networkidle'});
+    await page.waitForURL((url: URL): boolean => url.toString() !== currentUrl, {waitUntil: 'networkidle'});
   }
 
   /**

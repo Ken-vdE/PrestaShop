@@ -29,8 +29,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler;
 
 use ImageType;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerLogoImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHandler\DeleteManufacturerLogoImageHandlerInterface;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -63,15 +65,31 @@ class DeleteManufacturerLogoImageHandler extends AbstractManufacturerCommandHand
 
         $imageTypes = ImageType::getImagesTypes('manufacturers');
 
+        // Get image formats we will be deleting. It would probably be easier to use ImageFormatConfiguration::SUPPORTED_FORMATS,
+        // but we want to avoid any behavior change in minor/patch version.
+        $configuredImageFormats = ServiceLocator::get(ImageFormatConfiguration::class)->getGenerationFormats();
+
         foreach ($imageTypes as $imageType) {
-            $path = sprintf(
-                '%s%s-%s.jpg',
-                $this->imageDir,
-                $command->getManufacturerId()->getValue(),
-                stripslashes($imageType['name'])
-            );
-            if ($fs->exists($path)) {
-                $fs->remove($path);
+            foreach ($configuredImageFormats as $imageFormat) {
+                $path = sprintf(
+                    '%s%s-%s.' . $imageFormat,
+                    $this->imageDir,
+                    $command->getManufacturerId()->getValue(),
+                    stripslashes($imageType['name'])
+                );
+                if ($fs->exists($path)) {
+                    $fs->remove($path);
+                }
+
+                $path = sprintf(
+                    '%s%s-%s2x.' . $imageFormat,
+                    $this->imageDir,
+                    $command->getManufacturerId()->getValue(),
+                    stripslashes($imageType['name'])
+                );
+                if ($fs->exists($path)) {
+                    $fs->remove($path);
+                }
             }
         }
 

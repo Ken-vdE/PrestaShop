@@ -14,6 +14,7 @@ GitHub contributors:
 - Adonis Karavokyros
 - Adrien
 - Adrien Astier
+- Adrien Foulon
 - adviva
 - Agence CINS
 - Agnes
@@ -110,6 +111,7 @@ GitHub contributors:
 - Benjamin
 - Benjamin Dussouillez
 - Benjamin PONGY
+- Benoît Gross
 - bercik999
 - Bersam Karbasion
 - Berto Ferrero
@@ -118,7 +120,7 @@ GitHub contributors:
 - BigZ
 - BluTiGeS
 - BMS-fenaille
-- boherm
+- Boris Hermans
 - Boubker Bribri
 - Brais Pato
 - brouillon
@@ -139,6 +141,7 @@ GitHub contributors:
 - Cédric Fontaine
 - Cédric Geffroy
 - Cédric Mouleyre
+- Cedric Vangout
 - Cesar Quintini
 - cgordenne
 - cgordenne_wepika
@@ -269,8 +272,10 @@ GitHub contributors:
 - Fabio Chelly
 - Fabio Vannini
 - Fabrice Pantanella
+- fatm
 - Fatma BOUCHEKOI
 - Fatma Bouchekoua
+- Fatima Mazhit
 - fchellypresta
 - Felipe Uribe
 - fetis
@@ -390,6 +395,7 @@ GitHub contributors:
 - Jean-Philippe Beauve
 - jeanbe
 - jeckyl
+- Jens Wilke
 - Jérémie Broutier
 - Jeremie Legrand
 - Jérémie Tabet
@@ -606,6 +612,7 @@ GitHub contributors:
 - Moncef Essid
 - moncef102
 - montes
+- Morgan Pichat
 - mplh
 - mRaigne
 - mrAKAR
@@ -674,6 +681,7 @@ GitHub contributors:
 - Petyuska
 - Philip Iezzi
 - PhpMadman
+- PICHAT Morgan
 - Pierre
 - Pierre Avizou
 - Pierre Joube
@@ -873,6 +881,7 @@ GitHub contributors:
 - Thomas L'huillier
 - Thomas Leguillant
 - Thomas Leviandier
+- Thomas Leone
 - Thomas Nabord
 - Thomas Nares
 - Thomas Roux
@@ -881,6 +890,7 @@ GitHub contributors:
 - tiledcode
 - timactive
 - timsit
+- tleon
 - tmackay
 - TMMeilleur
 - tolispy

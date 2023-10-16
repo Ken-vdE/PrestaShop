@@ -26,7 +26,7 @@ import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_design_imageSettings_checkStoreImageFormat';
 
-describe('BO - Design - Image Settings - Check product image format', async () => {
+describe('BO - Design - Image Settings - Check store image format', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let idStore: number = 0;
@@ -137,7 +137,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
       }
 
       it('should go to \'Shop Parameters > Contact\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToProductsPage${arg.extOriginal}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToContactPage${arg.extOriginal}`, baseContext);
 
         await dashboardPage.goToSubMenu(
           page,
@@ -218,8 +218,6 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         await expect(imageTypeJPG).to.be.eq(arg.extOriginal);
 
         // Check the WebP file
-        /*
-         * @todo : https://github.com/PrestaShop/PrestaShop/issues/32528
         const pathImageWEBP: string = `${files.getRootPath()}/img/st/${idStore}-stores_default.webp`;
 
         const fileExistsWEBP = await files.doesFileExist(pathImageWEBP);
@@ -227,7 +225,6 @@ describe('BO - Design - Image Settings - Check product image format', async () =
 
         const imageTypeWEBP = await files.getImageType(pathImageWEBP);
         await expect(imageTypeWEBP).to.be.eq('webp');
-         */
       });
 
       it('should go to FO page', async function () {
@@ -298,7 +295,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         });
 
         it('should go to \'Shop Parameters > Contact\' page', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `goToProductsPage${arg.extension}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `goToContactPage${arg.extension}ForRemoval`, baseContext);
 
           await dashboardPage.goToSubMenu(
             page,
@@ -312,7 +309,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
         });
 
         it('should go to \'Stores\' tab', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `goToStoresTab${arg.extension}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `goToStoresTab${arg.extension}ForRemoval`, baseContext);
 
           await contactPage.goToStoresPage(page);
 
@@ -322,7 +319,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
       }
 
       it('should filter list by name', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `filterForDelete${arg.extension}`, baseContext);
 
         await storesPage.resetFilter(page);
         await storesPage.filterTable(page, 'input', 'sl!name', arg.store.name);
@@ -332,7 +329,7 @@ describe('BO - Design - Image Settings - Check product image format', async () =
       });
 
       it('should delete store', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'deleteStore', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `deleteStore${arg.extension}`, baseContext);
 
         const textResult = await storesPage.deleteStore(page, 1);
         await expect(textResult).to.contains(storesPage.successfulDeleteMessage);

@@ -5752,20 +5752,20 @@
         },
         {
             "name": "prestashop/blockwishlist",
-            "version": "v2.1.2",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockwishlist.git",
-                "reference": "5d84188d2c37f8df66438eaae643bd192781c208"
+                "reference": "75c39bc12648cba4e09d870479e7857fd06eee79"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockwishlist/zipball/5d84188d2c37f8df66438eaae643bd192781c208",
-                "reference": "5d84188d2c37f8df66438eaae643bd192781c208",
+                "url": "https://api.github.com/repos/PrestaShop/blockwishlist/zipball/75c39bc12648cba4e09d870479e7857fd06eee79",
+                "reference": "75c39bc12648cba4e09d870479e7857fd06eee79",
                 "shasum": ""
             },
             "require-dev": {
-                "prestashop/php-dev-tools": "~3.0"
+                "prestashop/php-dev-tools": "^4.3"
             },
             "type": "prestashop-module",
             "autoload": {
@@ -5791,9 +5791,9 @@
             "description": "PrestaShop module blockwishlist",
             "homepage": "https://github.com/PrestaShop/blockwishlist",
             "support": {
-                "source": "https://github.com/PrestaShop/blockwishlist/tree/v2.1.2"
+                "source": "https://github.com/PrestaShop/blockwishlist/tree/v3.0.1"
             },
-            "time": "2022-08-01T14:47:51+00:00"
+            "time": "2023-08-11T10:08:33+00:00"
         },
         {
             "name": "prestashop/circuit-breaker",
@@ -6378,23 +6378,23 @@
         },
         {
             "name": "prestashop/productcomments",
-            "version": "v5.0.3",
+            "version": "v6.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/productcomments.git",
-                "reference": "2a1e4bebec1d834b00728117e5e2655c7cf535a9"
+                "reference": "03955f7315f97f9d99fd1bd1675b24f0a97e1938"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/2a1e4bebec1d834b00728117e5e2655c7cf535a9",
-                "reference": "2a1e4bebec1d834b00728117e5e2655c7cf535a9",
+                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/03955f7315f97f9d99fd1bd1675b24f0a97e1938",
+                "reference": "03955f7315f97f9d99fd1bd1675b24f0a97e1938",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6.0"
+                "php": ">=7.1.3"
             },
             "require-dev": {
-                "prestashop/php-dev-tools": "^3.4"
+                "prestashop/php-dev-tools": "^4.3"
             },
             "type": "prestashop-module",
             "autoload": {
@@ -6419,9 +6419,9 @@
             "description": "PrestaShop module productcomments",
             "homepage": "https://github.com/PrestaShop/productcomments",
             "support": {
-                "source": "https://github.com/PrestaShop/productcomments/tree/v5.0.3"
+                "source": "https://github.com/PrestaShop/productcomments/tree/v6.0.2"
             },
-            "time": "2023-03-06T15:11:12+00:00"
+            "time": "2023-08-30T08:14:56+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -7136,16 +7136,16 @@
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v3.13.1",
+            "version": "v3.13.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "02ccda6023bcaa6a6e2c5851b9c22be13a983db9"
+                "reference": "8e6ed8e88d670ffadf0fa79993f8d255862be191"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/02ccda6023bcaa6a6e2c5851b9c22be13a983db9",
-                "reference": "02ccda6023bcaa6a6e2c5851b9c22be13a983db9",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/8e6ed8e88d670ffadf0fa79993f8d255862be191",
+                "reference": "8e6ed8e88d670ffadf0fa79993f8d255862be191",
                 "shasum": ""
             },
             "require": {
@@ -7181,9 +7181,9 @@
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_facetedsearch/tree/v3.13.1"
+                "source": "https://github.com/PrestaShop/ps_facetedsearch/tree/v3.13.2"
             },
-            "time": "2023-08-09T15:47:34+00:00"
+            "time": "2023-09-18T14:40:21+00:00"
         },
         {
             "name": "prestashop/ps_faviconnotificationbo",
@@ -7407,23 +7407,23 @@
         },
         {
             "name": "prestashop/ps_linklist",
-            "version": "v5.0.5",
+            "version": "v6.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_linklist.git",
-                "reference": "f27df3c4b7035557544bb3d8366024c6b175b2c8"
+                "reference": "f4048a33e3cfc06a76e68d40cb77425103f0124e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/f27df3c4b7035557544bb3d8366024c6b175b2c8",
-                "reference": "f27df3c4b7035557544bb3d8366024c6b175b2c8",
+                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/f4048a33e3cfc06a76e68d40cb77425103f0124e",
+                "reference": "f4048a33e3cfc06a76e68d40cb77425103f0124e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6.0"
+                "php": ">=7.2.5"
             },
             "require-dev": {
-                "prestashop/php-dev-tools": "^3.4"
+                "prestashop/php-dev-tools": "^4.3"
             },
             "type": "prestashop-module",
             "autoload": {
@@ -7448,9 +7448,9 @@
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_linklist/tree/v5.0.5"
+                "source": "https://github.com/PrestaShop/ps_linklist/tree/v6.0.4"
             },
-            "time": "2022-09-02T15:51:11+00:00"
+            "time": "2023-09-05T12:44:43+00:00"
         },
         {
             "name": "prestashop/ps_mainmenu",
@@ -9345,16 +9345,16 @@
         },
         {
             "name": "smarty/smarty",
-            "version": "v4.3.2",
+            "version": "v4.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "1d9cda2be34fd6edb74924684260636fd0b89288"
+                "reference": "3931d8f54b8f7a4ffab538582d34d4397ba8daa5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/1d9cda2be34fd6edb74924684260636fd0b89288",
-                "reference": "1d9cda2be34fd6edb74924684260636fd0b89288",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/3931d8f54b8f7a4ffab538582d34d4397ba8daa5",
+                "reference": "3931d8f54b8f7a4ffab538582d34d4397ba8daa5",
                 "shasum": ""
             },
             "require": {
@@ -9405,9 +9405,9 @@
             "support": {
                 "forum": "https://github.com/smarty-php/smarty/discussions",
                 "issues": "https://github.com/smarty-php/smarty/issues",
-                "source": "https://github.com/smarty-php/smarty/tree/v4.3.2"
+                "source": "https://github.com/smarty-php/smarty/tree/v4.3.4"
             },
-            "time": "2023-07-19T10:27:36+00:00"
+            "time": "2023-09-14T10:59:08+00:00"
         },
         {
             "name": "soundasleep/html2text",

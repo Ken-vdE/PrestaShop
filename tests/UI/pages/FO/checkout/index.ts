@@ -451,7 +451,7 @@ class Checkout extends FOBasePage {
    * @returns {Promise<void}
    */
   async clickOnProductImage(page: Page, productRow: number): Promise<void> {
-    return this.clickAndWaitForNavigation(page, this.productDetailsImage(productRow));
+    return this.clickAndWaitForURL(page, this.productDetailsImage(productRow));
   }
 
   /**
@@ -500,7 +500,7 @@ class Checkout extends FOBasePage {
    * @return {Promise<void>}
    */
   async goToPasswordReminderPage(page: Page): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.forgetPasswordLink);
+    await this.clickAndWaitForURL(page, this.forgetPasswordLink);
   }
 
   /**
@@ -540,7 +540,7 @@ class Checkout extends FOBasePage {
     await this.waitForVisibleSelector(page, this.emailInput);
     await this.setValue(page, this.emailInput, customer.email);
     await this.setValue(page, this.passwordInput, customer.password);
-    await this.clickAndWaitForNavigation(page, this.personalInformationContinueButton);
+    await this.clickAndWaitForLoadState(page, this.personalInformationContinueButton);
 
     return this.isStepCompleted(page, this.personalInformationStepForm);
   }
@@ -723,12 +723,12 @@ class Checkout extends FOBasePage {
     if (await this.elementVisible(page, this.addressStepAliasInput)) {
       await this.setValue(page, this.addressStepAliasInput, address.alias);
     }
+    await this.setValue(page, this.addressStepPhoneInput, address.phone);
     await this.setValue(page, this.addressStepCompanyInput, address.company);
     await this.setValue(page, this.addressStepAddress1Input, address.address);
     await this.setValue(page, this.addressStepPostCodeInput, address.postalCode);
     await this.setValue(page, this.addressStepCityInput, address.city);
     await this.selectByVisibleText(page, this.addressStepCountrySelect, address.country);
-    await this.setValue(page, this.addressStepPhoneInput, address.phone);
     if (await this.elementVisible(page, this.stateInput, 1000)) {
       await this.selectByVisibleText(page, this.stateInput, address.state);
     }
@@ -852,7 +852,7 @@ class Checkout extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async goToDeliveryStep(page: Page): Promise<boolean> {
-    await this.clickAndWaitForNavigation(page, this.addressStepContinueButton);
+    await this.clickAndWaitForLoadState(page, this.addressStepContinueButton);
 
     return this.isStepCompleted(page, this.addressStepSection);
   }
@@ -928,7 +928,7 @@ class Checkout extends FOBasePage {
    * @returns {Promise<void>}
    */
   async chooseShippingMethodWithoutValidation(page: Page, shippingMethodID: number, comment: string = ''): Promise<void> {
-    await this.clickAndWaitForNavigation(page, this.deliveryOptionLabel(shippingMethodID));
+    await this.clickAndWaitForURL(page, this.deliveryOptionLabel(shippingMethodID));
     await this.setValue(page, this.deliveryMessage, comment);
   }
 
@@ -982,10 +982,13 @@ class Checkout extends FOBasePage {
    * @param carrierID {number} The carrier row in list
    */
   async getCarrierData(page: Page, carrierID: number = 1): Promise<CarrierData> {
+    const priceText: string = await this.getTextContent(page, this.deliveryStepCarrierPrice(carrierID));
+
     return new CarrierData({
       name: await this.getTextContent(page, this.deliveryStepCarrierName(carrierID)),
       delay: await this.getTextContent(page, this.deliveryStepCarrierDelay(carrierID)),
-      price: parseFloat(await this.getTextContent(page, this.deliveryStepCarrierPrice(carrierID))),
+      price: parseFloat(priceText),
+      priceText,
     });
   }
 
@@ -995,7 +998,7 @@ class Checkout extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async goToPaymentStep(page: Page): Promise<boolean> {
-    await this.clickAndWaitForNavigation(page, this.deliveryStepContinueButton);
+    await this.clickAndWaitForLoadState(page, this.deliveryStepContinueButton);
 
     return this.isStepCompleted(page, this.deliveryStepSection);
   }
@@ -1095,7 +1098,7 @@ class Checkout extends FOBasePage {
       this.waitForVisibleSelector(page, this.paymentConfirmationButton),
       page.click(this.conditionToApproveLabel),
     ]);
-    await this.clickAndWaitForNavigation(page, this.paymentConfirmationButton);
+    await this.clickAndWaitForURL(page, this.paymentConfirmationButton);
   }
 
   /**
@@ -1142,7 +1145,7 @@ class Checkout extends FOBasePage {
     }
 
     // Validate the order
-    await this.clickAndWaitForNavigation(page, this.paymentConfirmationButton);
+    await this.clickAndWaitForURL(page, this.paymentConfirmationButton);
   }
 
   /**
@@ -1151,7 +1154,7 @@ class Checkout extends FOBasePage {
    * @param paymentModuleName {string} The payment module name
    * @returns {Promise<boolean>}
    */
-  isPaymentMethodExist(page: Page, paymentModuleName: string): Promise<boolean> {
+  async isPaymentMethodExist(page: Page, paymentModuleName: string): Promise<boolean> {
     return this.elementVisible(page, this.paymentOptionInput(paymentModuleName), 2000);
   }
 

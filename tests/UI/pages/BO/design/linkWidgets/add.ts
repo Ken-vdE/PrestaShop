@@ -45,7 +45,7 @@ class AddLinkBlock extends BOBasePage {
     this.pageTitle = 'Link List •';
 
     // Selectors
-    this.changeNamelangButton = '#form_link_block_block_name';
+    this.changeNamelangButton = '#form_link_block_block_name_dropdown';
     this.changeNameLangSpan = (lang: string) => `div.dropdown-menu span[data-locale='${lang}']`;
     this.nameInput = (id: number) => `#form_link_block_block_name_${id}`;
     this.hookSelect = '#form_link_block_id_hook';
@@ -232,7 +232,7 @@ class AddLinkBlock extends BOBasePage {
     // Add custom pages
     await this.addCustomPages(page, linkWidgetData.customPages);
     // Save
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForURL(page, this.saveButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

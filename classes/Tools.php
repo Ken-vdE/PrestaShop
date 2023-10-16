@@ -671,6 +671,10 @@ class ToolsCore
      */
     public static function setCurrency($cookie)
     {
+        /*
+         * If we received a request to change a currency and we have a valid currency ID, we will update it
+         * in the cookie. This is mostly done by the currency switcher in the header.
+         */
         if (Tools::isSubmit('SubmitCurrency') && ($id_currency = Tools::getValue('id_currency'))) {
             /** @var Currency $currency */
             $currency = Currency::getCurrencyInstance((int) $id_currency);
@@ -679,10 +683,13 @@ class ToolsCore
             }
         }
 
+        // First, let's try to load the currency we have in the cookie.
         $currency = null;
         if ((int) $cookie->id_currency) {
             $currency = Currency::getCurrencyInstance((int) $cookie->id_currency);
         }
+
+        // If it's not valid anymore, we will use a default currency set in our store.
         if (!Validate::isLoadedObject($currency) || (bool) $currency->deleted || !(bool) $currency->active) {
             $currency = Currency::getCurrencyInstance(Currency::getDefaultCurrencyId());
         }
@@ -691,7 +698,7 @@ class ToolsCore
         if ($currency->isAssociatedToShop()) {
             return $currency;
         } else {
-            // get currency from context
+            // Get currency from context
             $currency = Shop::getEntityIds('currency', Context::getContext()->shop->id, true, true);
             if (isset($currency[0]) && $currency[0]['id_currency']) {
                 $cookie->id_currency = $currency[0]['id_currency'];
@@ -1378,7 +1385,13 @@ class ToolsCore
      */
     public static function str2url($str)
     {
-        return (new StringModifier())->str2url((string) $str);
+        static $allow_accented_chars = null;
+
+        if ($allow_accented_chars === null) {
+            $allow_accented_chars = Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
+        }
+
+        return (new StringModifier())->str2url((string) $str, $allow_accented_chars);
     }
 
     /**
@@ -2530,11 +2543,6 @@ class ToolsCore
 	<FilesMatch \"\.(ttf|ttc|otf|eot|woff|woff2|svg)$\">
 		Header set Access-Control-Allow-Origin \"*\"
 	</FilesMatch>
-
-    <FilesMatch \"\.pdf$\">
-      Header set Content-Disposition \"Attachment\"
-      Header set X-Content-Type-Options \"nosniff\"
-    </FilesMatch>
 </IfModule>\n\n");
         fwrite($write_fd, '<Files composer.lock>
     # Apache 2.2
@@ -2553,6 +2561,9 @@ class ToolsCore
         if ($cache_control) {
             $cache_control = "<IfModule mod_expires.c>
 	ExpiresActive On
+    AddType image/webp .webp
+    ExpiresByType image/webp \"access plus 1 month\"
+    ExpiresByType image/avif \"access plus 1 month\"
 	ExpiresByType image/gif \"access plus 1 month\"
 	ExpiresByType image/jpeg \"access plus 1 month\"
 	ExpiresByType image/png \"access plus 1 month\"

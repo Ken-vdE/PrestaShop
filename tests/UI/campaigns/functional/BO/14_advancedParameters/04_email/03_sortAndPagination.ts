@@ -172,13 +172,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
     it('should go to \'Advanced parameters > E-mail\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmailPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.emailLink,
-      );
-
-      await dashboardPage.closeSfToolBar(page);
+      await emailPage.reloadPage(page);
 
       const pageTitle = await emailPage.getPageTitle(page);
       await expect(pageTitle).to.contains(emailPage.pageTitle);
@@ -260,13 +254,13 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
     {
       args:
         {
-          testIdentifier: 'sortByDateAddDesc', sortBy: 'date_add', sortDirection: 'desc',
+          testIdentifier: 'sortByDateAddDesc', sortBy: 'date_add', sortDirection: 'desc', isDate: true,
         },
     },
     {
       args:
         {
-          testIdentifier: 'sortByDateAddAsc', sortBy: 'date_add', sortDirection: 'asc',
+          testIdentifier: 'sortByDateAddAsc', sortBy: 'date_add', sortDirection: 'asc', isDate: true,
         },
     },
     {
@@ -309,6 +303,14 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
             await expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
             await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+          }
+        } else if (test.args.isDate) {
+          const expectedResult = await basicHelper.sortArrayDate(nonSortedTable);
+
+          if (test.args.sortDirection === 'asc') {
+            await expect(sortedTable).to.deep.equal(expectedResult);
+          } else {
+            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         } else {
           const expectedResult = await basicHelper.sortArray(nonSortedTable);

@@ -72,6 +72,7 @@ class AdminSearchControllerCoreTest extends TestCase
                             'title' => 'Search docs.prestashop-project.org',
                             'button_label' => 'Go to the documentation',
                             'link' => 'https://docs.prestashop-project.org/welcome/?q=',
+                            'is_external_link' => true,
                         ],
                     ],
                 ],
@@ -85,7 +86,7 @@ class AdminSearchControllerCoreTest extends TestCase
                     'features' => [
                         'Orders' => [
                             [
-                                'link' => 'http://localhost/admin-dev/index.php?controller=AdminOrders',
+                                'link' => 'http://localhost/admin-dev/index.php?controller=AdminOrders&bo_query=orders',
                             ],
                         ],
                     ],
@@ -94,6 +95,7 @@ class AdminSearchControllerCoreTest extends TestCase
                             'title' => 'Search docs.prestashop-project.org',
                             'button_label' => 'Go to the documentation',
                             'link' => 'https://docs.prestashop-project.org/welcome/?q=orders',
+                            'is_external_link' => true,
                         ],
                     ],
                 ],

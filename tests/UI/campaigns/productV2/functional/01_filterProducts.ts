@@ -8,11 +8,12 @@ import testContext from '@utils/testContext';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 import {
-  enableNewProductPageTest,
   resetNewProductPageAsDefault,
+  setFeatureFlag,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/productsV2';
 
@@ -29,7 +30,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
   let numberOfProducts: number = 0;
 
   // Pre-condition: Enable new product page
-  enableNewProductPageTest(`${baseContext}_enableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -262,15 +263,6 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
 
       const isVisible = await productsPage.isPositionColumnVisible(page);
       await expect(isVisible).to.be.true;
-    });
-
-    it('should filter list by \'Position\' and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterByPosition', baseContext);
-
-      await productsPage.filterProducts(page, 'position', '1', 'input');
-
-      const position = await productsPage.getTextColumn(page, 'position');
-      await expect(position).to.equal(1);
     });
 
     it('should reset filter', async function () {

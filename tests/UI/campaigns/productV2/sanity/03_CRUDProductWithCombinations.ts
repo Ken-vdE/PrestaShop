@@ -1,6 +1,3 @@
-import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
-
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
@@ -8,19 +5,25 @@ import testContext from '@utils/testContext';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 import {
-  enableNewProductPageTest,
   resetNewProductPageAsDefault,
+  setFeatureFlag,
 } from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
-import foProductPage from '@pages/FO/product';
+// Import BO pages
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/productsV2';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
 import combinationsTab from '@pages/BO/catalog/productsV2/add/combinationsTab';
+// Import FO pages
+import foProductPage from '@pages/FO/product';
 
 // Import data
 import ProductData from '@data/faker/product';
+
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'productV2_sanity_CRUDProductWithCombinations';
 
@@ -46,7 +49,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     attributes: [
       {
         name: 'color',
-        values: ['Grey', 'Taupe', 'Red'],
+        values: ['Gray', 'Taupe', 'Red'],
       },
       {
         name: 'size',
@@ -56,7 +59,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
   });
 
   // Pre-condition: Enable new product page
-  enableNewProductPageTest(`${baseContext}_enableNewProduct`);
+  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -146,7 +149,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await expect(successMessage).to.equal('Successfully generated 4 combinations.');
     });
 
-    it('combinations generation modal should be closed', async function () {
+    it('should check that combinations generation modal is closed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateCombinationsModalIsClosed2', baseContext);
 
       const isModalClosed = await combinationsTab.generateCombinationModalIsClosed(page);
@@ -228,7 +231,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await expect(successMessage).to.equal('Successfully generated 6 combinations.');
     });
 
-    it('combinations generation modal should be closed', async function () {
+    it('should check that combinations generation modal is closed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateCombinationsModalIsClosed2', baseContext);
 
       const isModalClosed = await combinationsTab.generateCombinationModalIsClosed(page);

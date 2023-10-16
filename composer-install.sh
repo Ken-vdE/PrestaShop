@@ -31,6 +31,9 @@ $composer install $composerArgs
 
 wd=$(pwd)
 
+cd "$wd/modules/autoupgrade"
+$composer install $composerArgs
+
 cd "$wd/modules/mollie"
 $composer install $composerArgs
 

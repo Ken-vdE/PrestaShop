@@ -142,8 +142,10 @@ mv "admin-dev" "baasdingen"
 
 
 # Run migrations etc.
-#$FORGE_PHP modules/autoupgrade/cli-upgrade.php --dir=baasdingen --channel=minor
 #$FORGE_PHP modules/autoupgrade/upgrade/upgrade.php
+#$FORGE_PHP modules/autoupgrade/cli-upgrade.php --dir=baasdingen --channel=minor
+# Using cli-upgrade.php kind of does not work because the version pulled is already the newest version
+# so the PrestashopConfiguration::getPrestaShopVersion() returns the new version and not the previous.
 $FORGE_PHP bin/console prestashop:schema:update-without-foreign
 
 
